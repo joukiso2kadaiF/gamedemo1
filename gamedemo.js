@@ -1,7 +1,7 @@
 var canvas;
-var linex;
 var a;
 var over = 0;
+var ms1,ms2,keika;
 
 function setup(){
   canvas = createCanvas(window.innerWidth,
@@ -17,6 +17,7 @@ function draw() {
   teki();
   gameover();
   istouchedteki();
+  goal();
 }
 
 function field() {
@@ -28,6 +29,14 @@ function field() {
   }
 }
 
+//キー押された時の動作をそれぞれ指定
+function keyPressed() {
+  if (keyCode === UP_ARROW || keyCode === DOWN_ARROW || keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
+    movejiki();
+    moveteki();
+  }
+}
+
 //〜自機について〜
 var jikiX = 200;
 var jikiY = 450;
@@ -35,10 +44,24 @@ function jiki() {
   fill(256,100,100,256);
   rect(jikiX,jikiY,50,50);
 }
+function movejiki() {
+  if (keyCode === UP_ARROW) {
+    jikiY = atariup(jikiY);
+  }
+  if (keyCode === DOWN_ARROW) {
+    jikiY = ataridown(jikiY);
+  }
+  if (keyCode === LEFT_ARROW) {
+    jikiX = atarileft(jikiX);
+  }
+  if (keyCode === RIGHT_ARROW) {
+    jikiX = atariright(jikiX);
+  }
+}
 
 //〜敵機について〜
 var tekiX = 0;
-var tekiY = 200;
+var tekiY = 400;
 var random;
 function teki() {
   fill(256,256,50,256);
@@ -50,25 +73,68 @@ function moveteki() {
   kyoriX = Math.abs(tekiX - jikiX);
   kyoriY = Math.abs(tekiY - jikiY);
   if (kyoriX < kyoriY && tekiY <= jikiY) {
-    tekiY += 50;
+    tekiY = ataridown(tekiY);
   }else if (kyoriX < kyoriY && jikiY <= tekiY) {
-    tekiY -= 50;
+    tekiY = atariup(tekiY);
   }else if (kyoriY < kyoriX && tekiX <= jikiX) {
-    tekiX += 50;
+    tekiX = atariright(tekiX);
   }else if (kyoriY < kyoriX && jikiX <= tekiX) {
-    tekiX -= 50;
+    tekiX = atarileft(tekiX);
   }else if (kyoriX == kyoriY) {
     if (random == 0 && tekiY <= jikiY) {
-      tekiY += 50;
+      tekiY = ataridown(tekiY);
     }else if (random == 0 && jikiY <= tekiY) {
-      tekiY -= 50;
+      tekiY = atariup(tekiY);
     }else if (random == 1 && tekiX <= jikiX) {
-      tekiX += 50;
+      tekiX = atariright(tekiX);
     }else if (random == 1 && jikiX <= tekiX) {
-      tekiX -= 50;
+      tekiX = atarileft(tekiX);
     }
   }
 }
+
+
+//当たり判定について
+function atariup(hanteichiY) {
+  if (hanteichiY != 0) {
+    return hanteichiY -= 50;
+  }else {
+    return hanteichiY;
+  }
+}
+function ataridown(hanteichiY) {
+  if (hanteichiY != 450) {
+    return hanteichiY += 50;
+  }else {
+    return hanteichiY;
+  }
+}
+function atarileft(hanteichiX) {
+  if (hanteichiX != 50) {
+    return hanteichiX -= 50;
+  }else {
+    return hanteichiX;
+  }
+}
+function atariright(hanteichiX) {
+  if (hanteichiX != 450) {
+    return hanteichiX += 50;
+  }else {
+    return hanteichiX;
+  }
+}
+
+
+//ゴールについて
+function goal() {
+  if (jikiX == 450 && jikiY == 0) {
+    fill(50,256,50,256);
+    rect(0,0,500,500);
+  }
+}
+
+
+//ゲームオーバーについて
 var kyoriX2,kyoriY2;
 function istouchedteki() {
   kyoriX2 = Math.abs(tekiX - jikiX);
@@ -79,47 +145,6 @@ function istouchedteki() {
     over = 256;
   }
 }
-
-
-function keyPressed() {
-  if (keyCode === UP_ARROW || keyCode === DOWN_ARROW || keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
-    moveteki();
-  }
-  if (keyCode === UP_ARROW) {
-    atariup();
-  }
-  if (keyCode === DOWN_ARROW) {
-    ataridown();
-  }
-  if (keyCode === LEFT_ARROW) {
-    atarileft();
-  }
-  if (keyCode === RIGHT_ARROW) {
-    atariright();
-  }
-}
-
-function atariup() {
-  if (jikiY != 50) {
-    jikiY -= 50;
-  }
-}
-function ataridown() {
-  if (jikiY != 450) {
-    jikiY += 50;
-  }
-}
-function atarileft() {
-  if (jikiX != 50) {
-    jikiX -= 50;
-  }
-}
-function atariright() {
-  if (jikiX != 450) {
-    jikiX += 50;
-  }
-}
-
 function gameover() {
   fill(256,50,50,over);
   rect(0,0,500,500);
