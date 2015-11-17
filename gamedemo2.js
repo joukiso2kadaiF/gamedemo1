@@ -4,6 +4,8 @@ var over = 0;
 var ms1,ms2,keika;
 var i = 0;
 
+//aaaaaaaaaaa
+
 function setup(){
   canvas = createCanvas(window.innerWidth,
                         window.innerHeight);
