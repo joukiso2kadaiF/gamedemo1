@@ -3,6 +3,8 @@ var linex;
 var a;
 var over = 0;
 
+//AAAAAAAA
+
 function setup(){
   canvas = createCanvas(window.innerWidth,
                         window.innerHeight);
